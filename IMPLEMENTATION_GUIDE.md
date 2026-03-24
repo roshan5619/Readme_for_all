@@ -1,4 +1,4 @@
-# Quantum Fraud Risk — Implementation Guide
+# Quantum Fraud Risk Implementation Guide
 
 ## Table of Contents
 1. [Project Structure](#1-project-structure)
