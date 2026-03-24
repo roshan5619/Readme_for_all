@@ -1,4 +1,4 @@
-# Quantum Fraud Risk — Knowledge Guide
+# Quantum Fraud Risk  Knowledge Guide
 
 ## Table of Contents
 1. [Overview](#1-overview)
