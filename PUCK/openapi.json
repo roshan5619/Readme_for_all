@@ -1,0 +1,1400 @@
+{
+ "openapi": "3.1.0",
+ "info": {
+  "title": "Quanverge Labs Quantum Puck API",
+  "description": "Local-first quantum circuit simulator (classical state-vector simulation).",
+  "version": "0.1.0"
+ },
+ "paths": {
+  "/api/v1/health": {
+   "get": {
+    "tags": [
+     "system"
+    ],
+    "summary": "Health",
+    "operationId": "health_api_v1_health_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/device": {
+   "get": {
+    "tags": [
+     "system"
+    ],
+    "summary": "Device",
+    "operationId": "device_api_v1_device_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/device/battery": {
+   "get": {
+    "tags": [
+     "system"
+    ],
+    "summary": "Battery",
+    "operationId": "battery_api_v1_device_battery_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/device/battery/mock": {
+   "put": {
+    "tags": [
+     "system"
+    ],
+    "summary": "Set Mock Battery",
+    "operationId": "set_mock_battery_api_v1_device_battery_mock_put",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/MockBatteryUpdate"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/device/eject": {
+   "post": {
+    "tags": [
+     "system"
+    ],
+    "summary": "Eject",
+    "operationId": "eject_api_v1_device_eject_post",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/device/reconnect": {
+   "post": {
+    "tags": [
+     "system"
+    ],
+    "summary": "Reconnect",
+    "operationId": "reconnect_api_v1_device_reconnect_post",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/backends": {
+   "get": {
+    "tags": [
+     "system"
+    ],
+    "summary": "Backends",
+    "operationId": "backends_api_v1_backends_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/gates": {
+   "get": {
+    "tags": [
+     "system"
+    ],
+    "summary": "Gates",
+    "operationId": "gates_api_v1_gates_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/metrics": {
+   "get": {
+    "tags": [
+     "system"
+    ],
+    "summary": "Metrics",
+    "operationId": "metrics_api_v1_metrics_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/jobs": {
+   "post": {
+    "tags": [
+     "jobs"
+    ],
+    "summary": "Submit Job",
+    "operationId": "submit_job_api_v1_jobs_post",
+    "parameters": [
+     {
+      "name": "wait",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "number",
+       "maximum": 30,
+       "minimum": 0,
+       "description": "seconds to wait for completion before returning",
+       "default": 0,
+       "title": "Wait"
+      },
+      "description": "seconds to wait for completion before returning"
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/JobRequest"
+       }
+      }
+     }
+    },
+    "responses": {
+     "202": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/JobInfo"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "get": {
+    "tags": [
+     "jobs"
+    ],
+    "summary": "List Jobs",
+    "operationId": "list_jobs_api_v1_jobs_get",
+    "parameters": [
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "maximum": 500,
+       "minimum": 1,
+       "default": 50,
+       "title": "Limit"
+      }
+     },
+     {
+      "name": "offset",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "minimum": 0,
+       "default": 0,
+       "title": "Offset"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "$ref": "#/components/schemas/JobInfo"
+         },
+         "title": "Response List Jobs Api V1 Jobs Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/jobs/{job_id}": {
+   "get": {
+    "tags": [
+     "jobs"
+    ],
+    "summary": "Get Job",
+    "operationId": "get_job_api_v1_jobs__job_id__get",
+    "parameters": [
+     {
+      "name": "job_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Job Id"
+      }
+     },
+     {
+      "name": "wait",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "number",
+       "maximum": 30,
+       "minimum": 0,
+       "description": "long-poll: seconds to wait for completion",
+       "default": 0,
+       "title": "Wait"
+      },
+      "description": "long-poll: seconds to wait for completion"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/JobInfo"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/jobs/{job_id}/cancel": {
+   "post": {
+    "tags": [
+     "jobs"
+    ],
+    "summary": "Cancel Job",
+    "operationId": "cancel_job_api_v1_jobs__job_id__cancel_post",
+    "parameters": [
+     {
+      "name": "job_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Job Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/JobInfo"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/experiments": {
+   "get": {
+    "tags": [
+     "experiments"
+    ],
+    "summary": "List Experiments",
+    "operationId": "list_experiments_api_v1_experiments_get",
+    "parameters": [
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "maximum": 1000,
+       "minimum": 1,
+       "default": 100,
+       "title": "Limit"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "$ref": "#/components/schemas/Experiment"
+         },
+         "title": "Response List Experiments Api V1 Experiments Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "post": {
+    "tags": [
+     "experiments"
+    ],
+    "summary": "Create Experiment",
+    "operationId": "create_experiment_api_v1_experiments_post",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ExperimentIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Experiment"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/experiments/{exp_id}": {
+   "get": {
+    "tags": [
+     "experiments"
+    ],
+    "summary": "Get Experiment",
+    "operationId": "get_experiment_api_v1_experiments__exp_id__get",
+    "parameters": [
+     {
+      "name": "exp_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Exp Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Experiment"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "put": {
+    "tags": [
+     "experiments"
+    ],
+    "summary": "Update Experiment",
+    "operationId": "update_experiment_api_v1_experiments__exp_id__put",
+    "parameters": [
+     {
+      "name": "exp_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Exp Id"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ExperimentIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Experiment"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "tags": [
+     "experiments"
+    ],
+    "summary": "Delete Experiment",
+    "operationId": "delete_experiment_api_v1_experiments__exp_id__delete",
+    "parameters": [
+     {
+      "name": "exp_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Exp Id"
+      }
+     }
+    ],
+    "responses": {
+     "204": {
+      "description": "Successful Response"
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/circuits/validate": {
+   "post": {
+    "tags": [
+     "circuits"
+    ],
+    "summary": "Validate",
+    "operationId": "validate_api_v1_circuits_validate_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ValidateRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/qasm/import": {
+   "post": {
+    "tags": [
+     "circuits"
+    ],
+    "summary": "Qasm Import",
+    "operationId": "qasm_import_api_v1_qasm_import_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/QasmImport"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/qasm/export": {
+   "post": {
+    "tags": [
+     "circuits"
+    ],
+    "summary": "Qasm Export",
+    "operationId": "qasm_export_api_v1_qasm_export_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/QasmExport"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/examples": {
+   "get": {
+    "tags": [
+     "circuits"
+    ],
+    "summary": "List Examples",
+    "operationId": "list_examples_api_v1_examples_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/examples/{example_id}": {
+   "get": {
+    "tags": [
+     "circuits"
+    ],
+    "summary": "Get Example",
+    "operationId": "get_example_api_v1_examples__example_id__get",
+    "parameters": [
+     {
+      "name": "example_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Example Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ },
+ "components": {
+  "schemas": {
+   "Circuit": {
+    "properties": {
+     "num_qubits": {
+      "type": "integer",
+      "maximum": 24.0,
+      "minimum": 1.0,
+      "title": "Num Qubits"
+     },
+     "num_clbits": {
+      "anyOf": [
+       {
+        "type": "integer",
+        "maximum": 64.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Num Clbits"
+     },
+     "gates": {
+      "items": {
+       "$ref": "#/components/schemas/Operation"
+      },
+      "type": "array",
+      "maxItems": 10000,
+      "title": "Gates"
+     },
+     "measure_all": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Measure All"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "required": [
+     "num_qubits"
+    ],
+    "title": "Circuit",
+    "description": "Quantum Puck circuit schema v1 (see docs/circuit-schema.md)."
+   },
+   "ErrorInfo": {
+    "properties": {
+     "code": {
+      "type": "string",
+      "title": "Code"
+     },
+     "message": {
+      "type": "string",
+      "title": "Message"
+     },
+     "op_index": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Op Index"
+     },
+     "line": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Line"
+     }
+    },
+    "type": "object",
+    "required": [
+     "code",
+     "message"
+    ],
+    "title": "ErrorInfo"
+   },
+   "Experiment": {
+    "properties": {
+     "name": {
+      "type": "string",
+      "maxLength": 120,
+      "minLength": 1,
+      "title": "Name"
+     },
+     "description": {
+      "type": "string",
+      "maxLength": 4000,
+      "title": "Description",
+      "default": ""
+     },
+     "circuit": {
+      "$ref": "#/components/schemas/Circuit"
+     },
+     "tags": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "maxItems": 16,
+      "title": "Tags"
+     },
+     "last_job_id": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 64
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Last Job Id"
+     },
+     "id": {
+      "type": "string",
+      "title": "Id"
+     },
+     "created_at": {
+      "type": "number",
+      "title": "Created At"
+     },
+     "updated_at": {
+      "type": "number",
+      "title": "Updated At"
+     },
+     "last_result": {
+      "anyOf": [
+       {
+        "additionalProperties": true,
+        "type": "object"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Last Result"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "required": [
+     "name",
+     "circuit",
+     "id",
+     "created_at",
+     "updated_at"
+    ],
+    "title": "Experiment"
+   },
+   "ExperimentIn": {
+    "properties": {
+     "name": {
+      "type": "string",
+      "maxLength": 120,
+      "minLength": 1,
+      "title": "Name"
+     },
+     "description": {
+      "type": "string",
+      "maxLength": 4000,
+      "title": "Description",
+      "default": ""
+     },
+     "circuit": {
+      "$ref": "#/components/schemas/Circuit"
+     },
+     "tags": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "maxItems": 16,
+      "title": "Tags"
+     },
+     "last_job_id": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 64
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Last Job Id"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "required": [
+     "name",
+     "circuit"
+    ],
+    "title": "ExperimentIn"
+   },
+   "HTTPValidationError": {
+    "properties": {
+     "detail": {
+      "items": {
+       "$ref": "#/components/schemas/ValidationError"
+      },
+      "type": "array",
+      "title": "Detail"
+     }
+    },
+    "type": "object",
+    "title": "HTTPValidationError"
+   },
+   "JobInfo": {
+    "properties": {
+     "id": {
+      "type": "string",
+      "title": "Id"
+     },
+     "status": {
+      "type": "string",
+      "enum": [
+       "queued",
+       "running",
+       "completed",
+       "failed",
+       "cancelled"
+      ],
+      "title": "Status"
+     },
+     "name": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Name"
+     },
+     "backend": {
+      "type": "string",
+      "title": "Backend"
+     },
+     "shots": {
+      "type": "integer",
+      "title": "Shots"
+     },
+     "num_qubits": {
+      "type": "integer",
+      "title": "Num Qubits"
+     },
+     "created_at": {
+      "type": "number",
+      "title": "Created At"
+     },
+     "started_at": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Started At"
+     },
+     "finished_at": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Finished At"
+     },
+     "queue_position": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Queue Position"
+     },
+     "result": {
+      "anyOf": [
+       {
+        "additionalProperties": true,
+        "type": "object"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Result"
+     },
+     "error": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/ErrorInfo"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "circuit": {
+      "anyOf": [
+       {
+        "additionalProperties": true,
+        "type": "object"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Circuit"
+     },
+     "experiment_id": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Experiment Id"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "status",
+     "backend",
+     "shots",
+     "num_qubits",
+     "created_at"
+    ],
+    "title": "JobInfo"
+   },
+   "JobRequest": {
+    "properties": {
+     "circuit": {
+      "$ref": "#/components/schemas/Circuit"
+     },
+     "shots": {
+      "type": "integer",
+      "maximum": 10000000.0,
+      "minimum": 0.0,
+      "title": "Shots",
+      "default": 1024
+     },
+     "seed": {
+      "anyOf": [
+       {
+        "type": "integer",
+        "maximum": 9007199254740991.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Seed"
+     },
+     "backend": {
+      "type": "string",
+      "title": "Backend",
+      "default": "qpuck.statevector"
+     },
+     "return_statevector": {
+      "type": "boolean",
+      "title": "Return Statevector",
+      "default": false
+     },
+     "name": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 120
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Name"
+     },
+     "experiment_id": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 64
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Experiment Id"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "required": [
+     "circuit"
+    ],
+    "title": "JobRequest"
+   },
+   "MockBatteryUpdate": {
+    "properties": {
+     "charging": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Charging"
+     },
+     "percent": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 100.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Percent"
+     }
+    },
+    "type": "object",
+    "title": "MockBatteryUpdate"
+   },
+   "Operation": {
+    "properties": {
+     "name": {
+      "type": "string",
+      "pattern": "^[A-Za-z_][A-Za-z0-9_]{0,31}$",
+      "title": "Name"
+     },
+     "qubits": {
+      "items": {
+       "type": "integer"
+      },
+      "type": "array",
+      "maxItems": 24,
+      "title": "Qubits"
+     },
+     "params": {
+      "items": {
+       "anyOf": [
+        {
+         "type": "number"
+        },
+        {
+         "type": "string"
+        }
+       ]
+      },
+      "type": "array",
+      "maxItems": 4,
+      "title": "Params"
+     },
+     "clbits": {
+      "anyOf": [
+       {
+        "items": {
+         "type": "integer"
+        },
+        "type": "array",
+        "maxItems": 1
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Clbits"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "required": [
+     "name"
+    ],
+    "title": "Operation"
+   },
+   "QasmExport": {
+    "properties": {
+     "circuit": {
+      "$ref": "#/components/schemas/Circuit"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "required": [
+     "circuit"
+    ],
+    "title": "QasmExport"
+   },
+   "QasmImport": {
+    "properties": {
+     "qasm": {
+      "type": "string",
+      "maxLength": 500000,
+      "title": "Qasm"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "required": [
+     "qasm"
+    ],
+    "title": "QasmImport"
+   },
+   "ValidateRequest": {
+    "properties": {
+     "circuit": {
+      "$ref": "#/components/schemas/Circuit"
+     },
+     "shots": {
+      "type": "integer",
+      "maximum": 10000000.0,
+      "minimum": 0.0,
+      "title": "Shots",
+      "default": 1024
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "required": [
+     "circuit"
+    ],
+    "title": "ValidateRequest"
+   },
+   "ValidationError": {
+    "properties": {
+     "loc": {
+      "items": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "integer"
+        }
+       ]
+      },
+      "type": "array",
+      "title": "Location"
+     },
+     "msg": {
+      "type": "string",
+      "title": "Message"
+     },
+     "type": {
+      "type": "string",
+      "title": "Error Type"
+     },
+     "input": {
+      "title": "Input"
+     },
+     "ctx": {
+      "type": "object",
+      "title": "Context"
+     }
+    },
+    "type": "object",
+    "required": [
+     "loc",
+     "msg",
+     "type"
+    ],
+    "title": "ValidationError"
+   }
+  }
+ }
+}
